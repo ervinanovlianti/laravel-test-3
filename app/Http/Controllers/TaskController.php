@@ -17,10 +17,18 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         // TASK: find out why this sentence fails, and fix it in Eloquent Model
-        auth()->user()->tasks()->create([
-            'name' => $request->name
-        ]);
+        $user = auth()->user();
 
-        return 'Success';
+        if ($user) {
+            $user->tasks()->create([
+                'name' => $request->name
+            ]);
+            return 'Success';
+        } elseif (empty($user)) {
+            Task::create([
+                'name' => $request->name
+            ]);
+            return '';
+        }
     }
 }
